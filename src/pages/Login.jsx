@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useFileHandler } from "6pp";
+import { CameraAltOutlined as CameraIcon } from "@mui/icons-material";
 import {
   Avatar,
-  Box,
   Button,
   Container,
   IconButton,
@@ -10,20 +10,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { CameraAltOutlined as CameraIcon } from "@mui/icons-material";
+import React, { useState } from "react";
 import { VisuallyHiddenInput } from "../components/styles/StyledComponent";
-import { useFileHandler, useInputValidation, useStrongPassword } from "6pp";
-import { usernameValidator } from "../utils/validator";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
 
+  const [name, setName] = useState("");
+  const [bio, setBio] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const toggleLogin = () => setIsLogin((prev) => !prev);
 
-  const name = useInputValidation("");
-  const bio = useInputValidation("");
-  const username = useInputValidation("", usernameValidator);
-  const password = useStrongPassword();
   const avatar = useFileHandler("single");
 
   const handleLogin = (e) => {
@@ -52,13 +51,13 @@ const Login = () => {
           alignItems: "center",
         }}
       >
-        <GradientBall />
-
         <Paper
           elevation={5}
           variant="elevation"
           sx={{
-            backgroundColor: "rgb(237, 237, 237)",
+            border: "1px solid rgba(255, 255, 255, 0.3)",
+            backgroundColor: "transparent",
+            color: "white",
             padding: 4,
             display: "flex",
             flexDirection: "column",
@@ -68,7 +67,7 @@ const Login = () => {
         >
           {isLogin ? (
             <>
-              <Typography variant="h5">LOGIN</Typography>
+              <Typography variant="h5">LOGIN TO CHATTERLY</Typography>
               <form
                 style={{
                   width: "100%",
@@ -77,24 +76,48 @@ const Login = () => {
                 onSubmit={handleLogin}
               >
                 <TextField
+                  sx={{
+                    input: { color: "white" }, // Change text color inside input
+                    "& .MuiInputLabel-root": { color: "#f9d423" }, // Change label color
+                    "& .MuiInputLabel-root.Mui-focused": { color: "#f9d423" }, // Label when clicked
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" }, // Default border
+                      "&:hover fieldset": {
+                        borderColor: "rgba(255, 255, 255, 0.5)",
+                      }, // Hover border
+                      "&.Mui-focused fieldset": { borderColor: "#f9d423" }, // Focus border
+                    },
+                  }}
                   required
                   fullWidth
                   label="Username"
                   margin="normal"
                   variant="outlined"
-                  value={username.value}
-                  onChange={username.changeHandler}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
 
                 <TextField
+                  sx={{
+                    input: { color: "white" }, // Change text color inside input
+                    "& .MuiInputLabel-root": { color: "#f9d423" }, // Change label color
+                    "& .MuiInputLabel-root.Mui-focused": { color: "#f9d423" }, // Label when clicked
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" }, // Default border
+                      "&:hover fieldset": {
+                        borderColor: "rgba(255, 255, 255, 0.5)",
+                      }, // Hover border
+                      "&.Mui-focused fieldset": { borderColor: "#f9d423" }, // Focus border
+                    },
+                  }}
                   required
                   fullWidth
                   type="password"
                   label="Password"
                   margin="normal"
                   variant="outlined"
-                  value={password.value}
-                  onChange={password.changeHandler}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
 
                 <Button
@@ -105,7 +128,7 @@ const Login = () => {
                     fontSize: "1rem",
                   }}
                   fullWidth
-                  variant="contained"
+                  variant="outlined"
                   color="secondary"
                   type="submit"
                 >
@@ -120,9 +143,13 @@ const Login = () => {
                     fontSize: "1rem",
                   }}
                   fullWidth
-                  variant="contained"
+                  variant="outlined"
                   color="info"
                   type="submit"
+                  onClick={() => {
+                    setUsername("guestuser1");
+                    setPassword("guestuser1");
+                  }}
                 >
                   Guest User
                 </Button>
@@ -139,16 +166,16 @@ const Login = () => {
                   }}
                   fullWidth
                   variant="outlined"
-                  color="primary"
+                  color="info"
                   onClick={toggleLogin}
                 >
-                  Sign Up
+                  Sign Up Instead
                 </Button>
               </form>
             </>
           ) : (
             <>
-              <Typography variant="h5">SIGNUP</Typography>
+              <Typography variant="h5">SIGNUP TO CHATTERLY</Typography>
               <form
                 style={{
                   width: "100%",
@@ -176,10 +203,10 @@ const Login = () => {
                       position: "absolute",
                       bottom: "-.3rem",
                       right: "1.4rem",
-                      color: "black",
-                      bgcolor: "rgba(35, 35, 35, 0.5)",
+                      color: "#f9d423",
+                      bgcolor: "rgba(92, 90, 90, 0.5)",
                       ":hover": {
-                        bgcolor: "rgba(108, 106, 106, 0.7)",
+                        bgcolor: "rgba(65, 63, 63, 0.7)",
                       },
                     }}
                     component="label"
@@ -207,57 +234,99 @@ const Login = () => {
                 )}
 
                 <TextField
+                  sx={{
+                    input: { color: "white" }, // Change text color inside input
+                    "& .MuiInputLabel-root": { color: "#f9d423" }, // Change label color
+                    "& .MuiInputLabel-root.Mui-focused": { color: "#f9d423" }, // Label when clicked
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" }, // Default border
+                      "&:hover fieldset": {
+                        borderColor: "rgba(255, 255, 255, 0.5)",
+                      }, // Hover border
+                      "&.Mui-focused fieldset": { borderColor: "#f9d423" }, // Focus border
+                    },
+                  }}
                   required
                   fullWidth
                   label="Name"
                   margin="dense"
                   variant="outlined"
-                  value={name.value}
-                  onChange={name.changeHandler}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
 
                 <TextField
+                  sx={{
+                    input: { color: "white" }, // Change text color inside input
+                    "& .MuiInputLabel-root": { color: "#f9d423" }, // Change label color
+                    "& .MuiInputLabel-root.Mui-focused": { color: "#f9d423" }, // Label when clicked
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" }, // Default border
+                      "&:hover fieldset": {
+                        borderColor: "rgba(255, 255, 255, 0.5)",
+                      }, // Hover border
+                      "&.Mui-focused fieldset": { borderColor: "#f9d423" }, // Focus border
+                    },
+                  }}
                   required
                   fullWidth
                   label="Username"
                   margin="dense"
                   variant="outlined"
-                  value={username.value}
-                  onChange={username.changeHandler}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
 
-                {username.error && username.value && (
+                {/* {username.error && username.value && (
                   <Typography color="error" variant="caption">
                     {username.error}
                   </Typography>
-                )}
+                )} */}
 
                 <TextField
+                  sx={{
+                    input: { color: "white" }, // Change text color inside input
+                    "& .MuiInputLabel-root": { color: "#f9d423" }, // Change label color
+                    "& .MuiInputLabel-root.Mui-focused": { color: "#f9d423" }, // Label when clicked
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" }, // Default border
+                      "&:hover fieldset": {
+                        borderColor: "rgba(255, 255, 255, 0.5)",
+                      }, // Hover border
+                      "&.Mui-focused fieldset": { borderColor: "#f9d423" }, // Focus border
+                    },
+                  }}
                   required
                   fullWidth
                   label="Bio"
                   margin="dense"
                   variant="outlined"
-                  value={bio.value}
-                  onChange={bio.changeHandler}
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
                 />
 
                 <TextField
+                  sx={{
+                    input: { color: "white" }, // Change text color inside input
+                    "& .MuiInputLabel-root": { color: "#f9d423" }, // Change label color
+                    "& .MuiInputLabel-root.Mui-focused": { color: "#f9d423" }, // Label when clicked
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" }, // Default border
+                      "&:hover fieldset": {
+                        borderColor: "rgba(255, 255, 255, 0.5)",
+                      }, // Hover border
+                      "&.Mui-focused fieldset": { borderColor: "#f9d423" }, // Focus border
+                    },
+                  }}
                   required
                   fullWidth
                   type="password"
                   label="Password"
                   margin="dense"
                   variant="outlined"
-                  value={password.value}
-                  onChange={password.changeHandler}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
-
-                {password.error && password.value && (
-                  <Typography color="error" variant="caption">
-                    {password.error}
-                  </Typography>
-                )}
 
                 <Button
                   sx={{
@@ -267,7 +336,7 @@ const Login = () => {
                     fontSize: "1rem",
                   }}
                   fullWidth
-                  variant="contained"
+                  variant="outlined"
                   color="secondary"
                   type="submit"
                 >
@@ -301,35 +370,3 @@ const Login = () => {
 };
 
 export default Login;
-
-const GradientBall = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (event) => {
-      setPosition({
-        x: event.clientX - 300, // Center the ball on the cursor
-        y: event.clientY - 300,
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
-  return (
-    <Box
-      sx={{
-        position: "fixed",
-        width: 400,
-        height: 400,
-        borderRadius: "50%",
-        background:
-          "radial-gradient(circle, rgb(227, 85, 224) 0%, rgba(215,52,131,0) 60%)",
-        pointerEvents: "none", // Prevent blocking interactions
-        transform: `translate(${position.x}px, ${position.y}px)`,
-        transition: "transform 0.2s ease-out",
-      }}
-    />
-  );
-};
