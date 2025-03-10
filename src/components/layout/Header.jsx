@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { lazy, Suspense, useState } from "react";
-import { black } from "../../constants/color";
+import { black, yellow } from "../../constants/color";
 import { useNavigate } from "react-router-dom";
 
 // ICONS IMPORTS
@@ -70,7 +70,7 @@ const Header = () => {
             <Box sx={{ display: { xs: "block", sm: "none" } }}>
               <IconBtn
                 title={"Menu"}
-                icon={<MenuIcon />}
+                icon={<MenuIcon sx={{ color: yellow }} />}
                 onClick={handleMobile}
               />
             </Box>
@@ -80,31 +80,31 @@ const Header = () => {
             <Box>
               <IconBtn
                 title={"Search"}
-                icon={<SearchIcon />}
+                icon={<SearchIcon sx={{ color: yellow }} />}
                 onClick={openSearch}
               />
 
               <IconBtn
                 title={"New Group"}
-                icon={<AddIcon />}
+                icon={<AddIcon sx={{ color: yellow }} />}
                 onClick={openNewGroup}
               />
 
               <IconBtn
                 title={"Manage Group"}
-                icon={<GroupIcon />}
+                icon={<GroupIcon sx={{ color: yellow }} />}
                 onClick={navigateToGroup}
               />
 
               <IconBtn
                 title={"Notifications"}
-                icon={<NotificationsIcon />}
+                icon={<NotificationsIcon sx={{ color: yellow }} />}
                 onClick={openNotification}
               />
 
               <IconBtn
                 title={"Logout"}
-                icon={<LogoutIcon />}
+                icon={<LogoutIcon sx={{ color: yellow }} />}
                 onClick={logoutHandler}
               />
             </Box>
