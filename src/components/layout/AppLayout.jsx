@@ -2,9 +2,20 @@ import React from "react";
 import Header from "./Header";
 import Title from "../shared/Title";
 import { Grid2 } from "@mui/material";
+import ChatList from "../specific/ChatList";
+import { black } from "../../constants/color";
+import { samepleChats } from "../../constants/sampleData";
+import { useParams } from "react-router-dom";
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
+    const { chatId } = useParams();
+
+    const handleDeleteChat = (e, _id, groupChat) => {
+      e.preventDefault();
+      console.log("delete chat", _id, groupChat);
+    };
+
     return (
       <>
         <Title />
@@ -15,11 +26,16 @@ const AppLayout = () => (WrappedComponent) => {
           <Grid2
             size={{ sm: 4, md: 3 }}
             height={"100%"}
+            bgcolor={black}
             sx={{
               display: { xs: "none", sm: "block" },
             }}
           >
-            1
+            <ChatList
+              chats={samepleChats}
+              chatId={chatId}
+              handleDeleteChat={handleDeleteChat}
+            />
           </Grid2>
 
           <Grid2

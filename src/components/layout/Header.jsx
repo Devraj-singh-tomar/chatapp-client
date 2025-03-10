@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { lazy, Suspense, useState } from "react";
-import { headerColor } from "../../constants/color";
+import { black } from "../../constants/color";
 import { useNavigate } from "react-router-dom";
 
 // ICONS IMPORTS
@@ -58,7 +58,7 @@ const Header = () => {
   return (
     <>
       <Box sx={{ flexGrow: 1 }} height={"4rem"}>
-        <AppBar position="static" sx={{ bgcolor: headerColor, height: "100%" }}>
+        <AppBar position="static" sx={{ bgcolor: black, height: "100%" }}>
           <Toolbar>
             <Typography
               variant="h6"
