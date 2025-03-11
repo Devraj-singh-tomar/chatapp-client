@@ -1,9 +1,17 @@
 import { Add as AddIcon } from "@mui/icons-material";
-import { Avatar, IconButton, ListItem, Stack, Typography } from "@mui/material";
+import RemoveIcon from "@mui/icons-material/Remove";
+import {
+  Avatar,
+  IconButton,
+  ListItem,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import React, { memo } from "react";
 import { yellow } from "../../constants/color";
 
-const UserItem = ({ user, handler, handlerIsLoading }) => {
+const UserItem = ({ user, handler, handlerIsLoading, isAdded = false }) => {
   const { name, _id, avatar } = user;
 
   return (
@@ -44,14 +52,22 @@ const UserItem = ({ user, handler, handlerIsLoading }) => {
             // bgcolor: purple,
             color: yellow,
             "&:hover": {
-              bgcolor: "secondary.main",
+              bgcolor: isAdded ? "error.main" : "secondary.main",
               color: "white",
             },
           }}
           onClick={() => handler(_id)}
           disabled={handlerIsLoading}
         >
-          <AddIcon />
+          {isAdded ? (
+            <Tooltip placement="top" title="Remove">
+              <RemoveIcon />
+            </Tooltip>
+          ) : (
+            <Tooltip placement="top" title="Add">
+              <AddIcon />
+            </Tooltip>
+          )}
         </IconButton>
       </Stack>
     </ListItem>
