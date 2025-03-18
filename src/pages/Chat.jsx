@@ -8,6 +8,13 @@ import {
 import { InputBox } from "../components/styles/StyledComponent";
 import { blue } from "../constants/color";
 import FileMenu from "../components/dialogs/FileMenu";
+import MessageComponent from "../components/shared/MessageComponent";
+import { sampleMessage } from "../constants/sampleData";
+
+const user = {
+  _id: "asdasdadW",
+  name: "Devraj singh",
+};
 
 const Chat = () => {
   const containerRef = useRef(null);
@@ -27,6 +34,10 @@ const Chat = () => {
         }}
       >
         {/* MESSAGES RENDer */}
+
+        {sampleMessage.map((i) => (
+          <MessageComponent key={i._id} message={i} user={user} />
+        ))}
       </Stack>
 
       <form
