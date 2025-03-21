@@ -1,18 +1,24 @@
 import {
+  Add as AddIcon,
+  Delete as DeleteIcon,
+  Done as DoneIcon,
+  Edit as EditIcon,
   KeyboardBackspaceOutlined as KeyboardBackspaceOutlinedIcon,
   Menu as MenuIcon,
 } from "@mui/icons-material";
 import {
+  Button,
   Drawer,
   Grid2,
   IconButton,
   Stack,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { black, yellow } from "../constants/color";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Link } from "../components/styles/StyledComponent";
 import AvatarCard from "../components/shared/AvatarCard";
 import { samepleChats } from "../constants/sampleData";
@@ -23,6 +29,10 @@ const Group = () => {
   const navigate = useNavigate();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [groupName, setGroupName] = useState("");
+  const [groupNameUpdatedValue, setGroupNameUpdatedValue] = useState();
+  const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false);
 
   const navigateBack = () => {
     navigate("/");
@@ -35,6 +45,32 @@ const Group = () => {
   const handleMobileClose = () => {
     setIsMobileMenuOpen(false);
   };
+
+  const updateGroupNameHandler = () => {
+    setIsEdit(false);
+    console.log("updated group name");
+  };
+
+  const openConfirmDeleteHandler = () => {
+    setConfirmDeleteDialog(true);
+  };
+
+  const closeConfirmDeleteHandler = () => {
+    setConfirmDeleteDialog(false);
+  };
+
+  const openAddMemberHandler = () => {};
+
+  useEffect(() => {
+    setGroupName("Group Name");
+    setGroupNameUpdatedValue("Group Name");
+
+    return () => {
+      setGroupName("");
+      setGroupNameUpdatedValue("");
+      setIsEdit(false);
+    };
+  }, [chatId]);
 
   const IconBtns = (
     <>
@@ -68,6 +104,84 @@ const Group = () => {
         </IconButton>
       </Tooltip>
     </>
+  );
+
+  const GroupName = (
+    <Stack
+      direction={"row"}
+      alignItems={"center"}
+      justifyContent={"center"}
+      spacing={"1rem"}
+      padding={"1rem"}
+    >
+      {isEdit ? (
+        <>
+          <TextField
+            sx={{
+              input: { color: "white" }, // Change text color inside input
+              "& .MuiInputLabel-root": { color: "#f9d423" }, // Change label color
+              "& .MuiInputLabel-root.Mui-focused": { color: "#f9d423" }, // Label when clicked
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" }, // Default border
+                "&:hover fieldset": {
+                  borderColor: "rgba(255, 255, 255, 0.5)",
+                }, // Hover border
+                "&.Mui-focused fieldset": { borderColor: "#f9d423" }, // Focus border
+              },
+            }}
+            label="Enter group name"
+            value={groupNameUpdatedValue}
+            onChange={(e) => setGroupNameUpdatedValue(e.target.value)}
+          />
+
+          <IconButton sx={{ color: yellow }} onClick={updateGroupNameHandler}>
+            <DoneIcon />
+          </IconButton>
+        </>
+      ) : (
+        <>
+          <Typography variant="h5">{groupName}</Typography>
+          <IconButton sx={{ color: yellow }} onClick={() => setIsEdit(true)}>
+            <EditIcon />
+          </IconButton>
+        </>
+      )}
+    </Stack>
+  );
+
+  const ButtonGroup = (
+    <Stack
+      direction={{
+        xs: "column-reverse",
+        sm: "row",
+      }}
+      spacing={"1rem"}
+      p={{
+        xs: "0",
+        sm: "1rem",
+        md: "1rem 4rem",
+      }}
+    >
+      <Button
+        variant="outlined"
+        size="medium"
+        color="error"
+        startIcon={<DeleteIcon />}
+        onClick={openConfirmDeleteHandler}
+      >
+        Delete Group
+      </Button>
+
+      <Button
+        variant="contained"
+        size="medium"
+        color="secondary"
+        startIcon={<AddIcon />}
+        onClick={openAddMemberHandler}
+      >
+        Add Member
+      </Button>
+    </Stack>
   );
 
   return (
@@ -105,6 +219,37 @@ const Group = () => {
         }}
       >
         {IconBtns}
+
+        {groupName && (
+          <>
+            {GroupName}
+            <Typography
+              margin={"2rem"}
+              alignSelf={"flex-start"}
+              variant="body1"
+            >
+              Members
+            </Typography>
+
+            <Stack
+              maxWidth={"45rem"}
+              width={"100%"}
+              boxSizing={"border-box"}
+              padding={{
+                sm: "1rem",
+                xs: "0",
+                md: "1rem 4rem",
+              }}
+              spacing={"2rem"}
+              height={"50vh"}
+              overflow={"auto"}
+            >
+              {/* MEMBERS */}
+            </Stack>
+
+            {ButtonGroup}
+          </>
+        )}
       </Grid2>
 
       <Drawer
