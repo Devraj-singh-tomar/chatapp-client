@@ -10,6 +10,9 @@ const Chat = lazy(() => import("./pages/Chat"));
 const Group = lazy(() => import("./pages/Group"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
+// ADMIN PANEL IMPORT's
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+
 let user = true;
 
 const App = () => {
@@ -33,6 +36,8 @@ const App = () => {
               </ProtectRoute>
             }
           />
+
+          <Route path="/admin" element={<AdminLogin />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
