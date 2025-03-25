@@ -9,6 +9,7 @@ const Login = lazy(() => import("./pages/Login"));
 const Chat = lazy(() => import("./pages/Chat"));
 const Group = lazy(() => import("./pages/Group"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
 
 // ADMIN PANEL IMPORT's
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
@@ -38,6 +39,7 @@ const App = () => {
           />
 
           <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<Dashboard />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
