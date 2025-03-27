@@ -38,17 +38,17 @@ const adminTabs = [
   },
   {
     name: "User",
-    path: "/admin/users-management",
+    path: "/admin/users",
     icon: <PersonIcon sx={{ color: yellow }} />,
   },
   {
     name: "Chat",
-    path: "/admin/chats-management",
+    path: "/admin/chats",
     icon: <GroupIcon sx={{ color: yellow }} />,
   },
   {
     name: "Message",
-    path: "/admin/messages-management",
+    path: "/admin/messages",
     icon: <MessageIcon sx={{ color: yellow }} />,
   },
 ];
