@@ -36,4 +36,30 @@ const InputBox = styled("input")`
   background-color: ${black};
 `;
 
-export { VisuallyHiddenInput, Link, InputBox };
+const SearchField = styled("input")`
+  padding: 0.699rem 1rem;
+  width: 20vmax;
+  border: none;
+  color: white;
+  outline: none;
+  border-radius: 10px;
+  border: 1px solid rgb(125, 125, 125);
+  background-color: ${black};
+  font-size: 0.81rem;
+`;
+
+const CurveButton = styled("button")`
+  border-radius: 10px;
+  padding: 0.899rem 1rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-color: ${black};
+  color: white;
+  font-size: 0.81rem;
+  &:hover {
+    background-color: rgba(16, 16, 16, 0.8);
+  }
+`;
+
+export { VisuallyHiddenInput, Link, InputBox, SearchField, CurveButton };

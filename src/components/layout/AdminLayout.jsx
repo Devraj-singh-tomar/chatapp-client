@@ -142,7 +142,7 @@ const AdminLayout = ({ children }) => {
         <Sidebar />
       </Grid2>
 
-      <Grid2 size={{ xs: 12, md: 8, lg: 9 }} bgcolor={"gray"}>
+      <Grid2 size={{ xs: 12, md: 8, lg: 9 }} bgcolor={black}>
         {children}
       </Grid2>
 
