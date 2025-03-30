@@ -104,7 +104,7 @@ export const dashboardData = {
 
   chats: [
     {
-      name: "LabadBass Group",
+      name: "First Group",
       avatar: ["https://www.w3schools.com/howto/img_avatar.png"],
       _id: "1",
       groupChat: false,
@@ -120,7 +120,7 @@ export const dashboardData = {
       },
     },
     {
-      name: "L*Da Luston Group",
+      name: "Second Group",
       avatar: ["https://www.w3schools.com/howto/img_avatar.png"],
       _id: "2",
       groupChat: true,
