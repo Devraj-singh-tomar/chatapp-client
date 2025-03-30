@@ -140,7 +140,7 @@ export const dashboardData = {
   messages: [
     {
       attachments: [],
-      content: "L*uda ka Message hai",
+      content: "message is comoinglansdasd message is",
       _id: "sfnsdjkfsdnfkjsbnd",
       sender: {
         avatar: "https://www.w3schools.com/howto/img_avatar.png",
