@@ -7,9 +7,14 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { black, yellow } from "../../constants/color";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { server } from "../../constants/config";
+import { toast } from "react-hot-toast";
+import { userNotExists } from "../../redux/reducres/auth";
 
 // ICONS IMPORTS
 import {
@@ -26,6 +31,7 @@ const NotificationDialog = lazy(() => import("../specific/Notification"));
 const NewGroupDialog = lazy(() => import("../specific/NewGroup"));
 
 const Header = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [isMobile, setIsMobile] = useState(false);
@@ -53,7 +59,19 @@ const Header = () => {
     setIsNotification((prev) => !prev);
   };
 
-  const logoutHandler = () => {};
+  const logoutHandler = async () => {
+    try {
+      const { data } = await axios.get(`${server}/api/v1/user/logout`, {
+        withCredentials: true,
+      });
+
+      dispatch(userNotExists());
+
+      toast.success(data?.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Logout failed");
+    }
+  };
 
   return (
     <>
