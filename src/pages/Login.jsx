@@ -10,10 +10,17 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import axios from "axios";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { VisuallyHiddenInput } from "../components/styles/StyledComponent";
+import { server } from "../constants/config";
+import { userExists } from "../redux/reducres/auth";
 
 const Login = () => {
+  const dispatch = useDispatch();
+
   const [isLogin, setIsLogin] = useState(true);
 
   const [name, setName] = useState("");
@@ -25,12 +32,66 @@ const Login = () => {
 
   const avatar = useFileHandler("single");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.post(
+        `${server}/api/v1/user/login`,
+        {
+          username,
+          password,
+        },
+        config
+      );
+
+      dispatch(userExists(data.user));
+
+      toast.success(data.message, {});
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append("avatar", avatar.file);
+    formData.append("name", name);
+    formData.append("bio", bio);
+    formData.append("username", username);
+    formData.append("password", password);
+
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    try {
+      const { data } = await axios.post(
+        `${server}/api/v1/user/new`,
+        formData,
+        config
+      );
+
+      dispatch(userExists(true));
+
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something Went Wrong");
+    } finally {
+    }
   };
 
   return (
