@@ -1,20 +1,34 @@
-import React from "react";
-import Header from "./Header";
-import Title from "../shared/Title";
-import { Grid2 } from "@mui/material";
-import ChatList from "../specific/ChatList";
+import { Drawer, Grid2, Skeleton } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { black } from "../../constants/color";
-import { samepleChats } from "../../constants/sampleData";
-import { useParams } from "react-router-dom";
+import { useErrors } from "../../hooks/hooks";
+import { useMyChatsQuery } from "../../redux/api/api";
+import { setIsMobile } from "../../redux/reducres/misc";
+import Title from "../shared/Title";
+import ChatList from "../specific/ChatList";
 import Profile from "../specific/Profile";
+import Header from "./Header";
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
     const { chatId } = useParams();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const { isMobile } = useSelector((state) => state.misc);
+
+    const { data, isLoading, isError, error, refetch } = useMyChatsQuery("");
+
+    useErrors([{ isError, error }]);
 
     const handleDeleteChat = (e, _id, groupChat) => {
       e.preventDefault();
       console.log("delete chat", _id, groupChat);
+    };
+
+    const handleMobileClose = () => {
+      dispatch(setIsMobile(false));
     };
 
     return (
@@ -22,6 +36,19 @@ const AppLayout = () => (WrappedComponent) => {
         <Title />
 
         <Header />
+
+        {isLoading ? (
+          <Skeleton />
+        ) : (
+          <Drawer open={isMobile} onClose={handleMobileClose}>
+            <ChatList
+              w="70vw"
+              chats={data?.chats}
+              chatId={chatId}
+              handleDeleteChat={handleDeleteChat}
+            />
+          </Drawer>
+        )}
 
         <Grid2 container height={"calc(100vh - 4rem)"}>
           <Grid2
@@ -32,11 +59,15 @@ const AppLayout = () => (WrappedComponent) => {
               display: { xs: "none", sm: "block" },
             }}
           >
-            <ChatList
-              chats={samepleChats}
-              chatId={chatId}
-              handleDeleteChat={handleDeleteChat}
-            />
+            {isLoading ? (
+              <Skeleton />
+            ) : (
+              <ChatList
+                chats={data?.chats}
+                chatId={chatId}
+                handleDeleteChat={handleDeleteChat}
+              />
+            )}
           </Grid2>
 
           <Grid2

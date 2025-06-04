@@ -85,7 +85,7 @@ const Login = () => {
         config
       );
 
-      dispatch(userExists(true));
+      dispatch(userExists(data.user));
 
       toast.success(data.message);
     } catch (error) {

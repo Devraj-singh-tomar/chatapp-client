@@ -25,6 +25,7 @@ import {
   Logout as LogoutIcon,
   Notifications as NotificationsIcon,
 } from "@mui/icons-material";
+import { setIsMobile } from "../../redux/reducres/misc";
 
 const SearchDialog = lazy(() => import("../specific/Search"));
 const NotificationDialog = lazy(() => import("../specific/Notification"));
@@ -34,13 +35,12 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [isMobile, setIsMobile] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const [isNewGroup, setIsNewGroup] = useState(false);
   const [isNotification, setIsNotification] = useState(false);
 
   const handleMobile = () => {
-    setIsMobile((prev) => !prev);
+    dispatch(setIsMobile(true));
   };
 
   const openSearch = () => {
