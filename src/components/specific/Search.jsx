@@ -11,9 +11,13 @@ import {
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { black, yellow } from "../../constants/color";
-import { useLazySearchUserQuery } from "../../redux/api/api";
+import {
+  useLazySearchUserQuery,
+  useSendFriendRequestMutation,
+} from "../../redux/api/api";
 import { setIsSearch } from "../../redux/reducres/misc";
 import UserItem from "../shared/UserItem";
+import { useAsyncMutation } from "../../hooks/hooks";
 
 const Search = () => {
   const dispatch = useDispatch();
@@ -22,14 +26,16 @@ const Search = () => {
 
   const [searchUser] = useLazySearchUserQuery();
 
-  const search = useInputValidation("");
+  const [sendFriendRequest, isLoadingSendFriendRequest] = useAsyncMutation(
+    useSendFriendRequestMutation
+  );
 
-  let isLoadingSendFriendRequest = false;
+  const search = useInputValidation("");
 
   const [users, setUsers] = useState([]);
 
-  const addFriendHandler = (id) => {
-    console.log(id);
+  const addFriendHandler = async (id) => {
+    await sendFriendRequest("Friend request sentss", { userId: id });
   };
 
   const searchCloseHandler = () => dispatch(setIsSearch(false));
