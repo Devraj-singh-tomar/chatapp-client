@@ -8,8 +8,9 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { memo } from "react";
+import { memo } from "react";
 import { yellow } from "../../constants/color";
+import { transformImage } from "../../lib/features";
 
 const UserItem = ({
   user,
@@ -35,7 +36,7 @@ const UserItem = ({
         width={"100%"}
         {...styling}
       >
-        <Avatar />
+        <Avatar src={transformImage(avatar)} />
 
         <Typography
           variant="body2"
