@@ -7,11 +7,13 @@ import Person2Icon from "@mui/icons-material/Person2";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import { transformImage } from "../../lib/features";
 
-const Profile = () => {
+const Profile = ({ user }) => {
   return (
     <Stack spacing={"1.8rem"} direction={"column"} alignItems={"center"}>
       <Avatar
+        src={transformImage(user?.avatar?.url)}
         sx={{
           width: 120,
           height: 120,
@@ -23,9 +25,7 @@ const Profile = () => {
 
       <ProfileCard
         heading={"Bio"}
-        text={
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium, reprehenderit!"
-        }
+        text={user.bio}
         Icon={
           <TextSnippetIcon
             sx={{
@@ -37,7 +37,7 @@ const Profile = () => {
 
       <ProfileCard
         heading={"Username"}
-        text={"@devrajsingh123"}
+        text={user?.username}
         Icon={
           <AccountCircleIcon
             sx={{
@@ -49,7 +49,7 @@ const Profile = () => {
 
       <ProfileCard
         heading={"Name"}
-        text={"Devraj singh tomar"}
+        text={user?.name}
         Icon={
           <Person2Icon
             sx={{
@@ -61,7 +61,7 @@ const Profile = () => {
 
       <ProfileCard
         heading={"Joined"}
-        text={moment("2023-11-14T18:30:00.0002").fromNow()}
+        text={moment(user?.createdAt).fromNow()}
         Icon={
           <CalendarTodayIcon
             sx={{

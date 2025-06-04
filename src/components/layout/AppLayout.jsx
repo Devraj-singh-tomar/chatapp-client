@@ -17,6 +17,7 @@ const AppLayout = () => (WrappedComponent) => {
     const navigate = useNavigate();
 
     const { isMobile } = useSelector((state) => state.misc);
+    const { user } = useSelector((state) => state.auth);
 
     const { data, isLoading, isError, error, refetch } = useMyChatsQuery("");
 
@@ -87,7 +88,7 @@ const AppLayout = () => (WrappedComponent) => {
               padding: "2rem",
             }}
           >
-            <Profile />
+            <Profile user={user} />
           </Grid2>
         </Grid2>
       </>
