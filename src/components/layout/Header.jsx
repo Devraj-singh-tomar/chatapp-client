@@ -15,6 +15,7 @@ import axios from "axios";
 import { server } from "../../constants/config";
 import { toast } from "react-hot-toast";
 import { userNotExists } from "../../redux/reducres/auth";
+import { setIsNotification } from "../../redux/reducres/misc";
 
 // ICONS IMPORTS
 import {
@@ -35,10 +36,9 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isSearch } = useSelector((state) => state.misc);
+  const { isSearch, isNotification } = useSelector((state) => state.misc);
 
   const [isNewGroup, setIsNewGroup] = useState(false);
-  const [isNotification, setIsNotification] = useState(false);
 
   const handleMobile = () => dispatch(setIsMobile(true));
 
@@ -52,9 +52,7 @@ const Header = () => {
     navigate("/groups");
   };
 
-  const openNotification = () => {
-    setIsNotification((prev) => !prev);
-  };
+  const openNotification = () => dispatch(setIsNotification(true));
 
   const logoutHandler = async () => {
     try {
