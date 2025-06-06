@@ -9,12 +9,15 @@ import Title from "../shared/Title";
 import ChatList from "../specific/ChatList";
 import Profile from "../specific/Profile";
 import Header from "./Header";
+import { getSocket } from "../../socket";
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
     const { chatId } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const socket = getSocket();
 
     const { isMobile } = useSelector((state) => state.misc);
     const { user } = useSelector((state) => state.auth);
@@ -76,7 +79,7 @@ const AppLayout = () => (WrappedComponent) => {
             height={"100%"}
             bgcolor={"violet"}
           >
-            <WrappedComponent {...props} />
+            <WrappedComponent {...props} chatId={chatId} />
           </Grid2>
 
           <Grid2

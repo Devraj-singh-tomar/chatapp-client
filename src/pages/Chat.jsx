@@ -1,6 +1,6 @@
-import React, { Fragment, useRef } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import AppLayout from "../components/layout/AppLayout";
-import { IconButton, Stack } from "@mui/material";
+import { IconButton, Skeleton, Stack } from "@mui/material";
 import {
   AttachFileOutlined as AttachFileOutlinedIcon,
   SendOutlined as SendOutlinedIcon,
@@ -10,16 +10,45 @@ import { blue } from "../constants/color";
 import FileMenu from "../components/dialogs/FileMenu";
 import MessageComponent from "../components/shared/MessageComponent";
 import { sampleMessage } from "../constants/sampleData";
+import { getSocket } from "../socket";
+import { NEW_MESSAGE } from "../constants/events";
+import { useChatDetailsQuery } from "../redux/api/api";
 
 const user = {
   _id: "asdasdadW",
   name: "Devraj singh",
 };
 
-const Chat = () => {
+const Chat = ({ chatId }) => {
   const containerRef = useRef(null);
 
-  return (
+  const socket = getSocket();
+
+  const chatDetatils = useChatDetailsQuery({ chatId, skip: !chatId });
+
+  // console.log(chatDetatils.data.chat.members);
+
+  const [message, setMessage] = useState("");
+
+  const members = chatDetatils?.data?.chat?.members;
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    if (!message.trim()) return;
+
+    // EMITTING MESSAGE TO THE SERVER ------------------------
+
+    socket.emit(NEW_MESSAGE, { chatId, members, message });
+
+    setMessage("");
+
+    console.log(message);
+  };
+
+  return chatDetatils.isLoading ? (
+    <Skeleton />
+  ) : (
     <Fragment>
       <Stack
         ref={containerRef}
@@ -44,6 +73,7 @@ const Chat = () => {
         style={{
           height: "10%",
         }}
+        onSubmit={submitHandler}
       >
         <Stack
           direction={"row"}
@@ -70,7 +100,11 @@ const Chat = () => {
             />
           </IconButton>
 
-          <InputBox placeholder="Type a message" />
+          <InputBox
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Type a message"
+          />
 
           <IconButton
             type="submit"

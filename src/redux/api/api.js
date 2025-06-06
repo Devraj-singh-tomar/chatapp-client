@@ -16,6 +16,20 @@ const api = createApi({
       providesTags: ["Chat"],
     }),
 
+    chatDetails: builder.query({
+      query: ({ chatId, populate = false }) => {
+        let url = `chat/${chatId}`;
+        if (populate) url += "?populate=true";
+
+        return {
+          url,
+          credentials: "include",
+        };
+      },
+
+      providesTags: ["Chat"],
+    }),
+
     searchUser: builder.query({
       query: (name) => ({
         url: `user/search?name=${name}`,
@@ -64,4 +78,5 @@ export const {
   useGetNotificationsQuery,
   useAcceptFriendRequestMutation,
   useSendFriendRequestMutation,
+  useChatDetailsQuery,
 } = api;
