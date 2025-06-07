@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import AppLayout from "../components/layout/AppLayout";
 import { IconButton, Skeleton, Stack } from "@mui/material";
 import {
@@ -13,13 +13,9 @@ import { sampleMessage } from "../constants/sampleData";
 import { getSocket } from "../socket";
 import { NEW_MESSAGE } from "../constants/events";
 import { useChatDetailsQuery } from "../redux/api/api";
+import { useErrors, useSocketEvents } from "../hooks/hooks";
 
-const user = {
-  _id: "asdasdadW",
-  name: "Devraj singh",
-};
-
-const Chat = ({ chatId }) => {
+const Chat = ({ chatId, user }) => {
   const containerRef = useRef(null);
 
   const socket = getSocket();
@@ -29,6 +25,11 @@ const Chat = ({ chatId }) => {
   // console.log(chatDetatils.data.chat.members);
 
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+
+  const errors = [{ isError: chatDetatils.isError, error: chatDetatils.error }];
+
+  console.log(messages);
 
   const members = chatDetatils?.data?.chat?.members;
 
@@ -42,9 +43,18 @@ const Chat = ({ chatId }) => {
     socket.emit(NEW_MESSAGE, { chatId, members, message });
 
     setMessage("");
-
-    console.log(message);
   };
+
+  const newMessagesHandler = useCallback((data) => {
+    // console.log(data);
+    setMessages((prev) => [...prev, data.message]);
+  }, []);
+
+  const eventsHandler = { [NEW_MESSAGE]: newMessagesHandler };
+
+  useSocketEvents(socket, eventsHandler);
+
+  useErrors(errors);
 
   return chatDetatils.isLoading ? (
     <Skeleton />
@@ -64,7 +74,7 @@ const Chat = ({ chatId }) => {
       >
         {/* MESSAGES RENDer */}
 
-        {sampleMessage.map((i) => (
+        {messages.map((i) => (
           <MessageComponent key={i._id} message={i} user={user} />
         ))}
       </Stack>
