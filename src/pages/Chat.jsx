@@ -1,35 +1,45 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
-import AppLayout from "../components/layout/AppLayout";
-import { IconButton, Skeleton, Stack } from "@mui/material";
 import {
   AttachFileOutlined as AttachFileOutlinedIcon,
   SendOutlined as SendOutlinedIcon,
 } from "@mui/icons-material";
+import { IconButton, Skeleton, Stack } from "@mui/material";
+import { Fragment, useCallback, useRef, useState } from "react";
+import FileMenu from "../components/dialogs/FileMenu";
+import AppLayout from "../components/layout/AppLayout";
+import MessageComponent from "../components/shared/MessageComponent";
 import { InputBox } from "../components/styles/StyledComponent";
 import { blue } from "../constants/color";
-import FileMenu from "../components/dialogs/FileMenu";
-import MessageComponent from "../components/shared/MessageComponent";
-import { sampleMessage } from "../constants/sampleData";
-import { getSocket } from "../socket";
 import { NEW_MESSAGE } from "../constants/events";
-import { useChatDetailsQuery } from "../redux/api/api";
 import { useErrors, useSocketEvents } from "../hooks/hooks";
+import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
+import { getSocket } from "../socket";
+import { useInfiniteScrollTop } from "6pp";
 
 const Chat = ({ chatId, user }) => {
   const containerRef = useRef(null);
-
   const socket = getSocket();
-
-  const chatDetatils = useChatDetailsQuery({ chatId, skip: !chatId });
-
-  // console.log(chatDetatils.data.chat.members);
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [page, setPage] = useState(1);
 
-  const errors = [{ isError: chatDetatils.isError, error: chatDetatils.error }];
+  const chatDetatils = useChatDetailsQuery({ chatId, skip: !chatId });
+  const oldMessageChunk = useGetMessagesQuery({ chatId, page });
 
-  console.log(messages);
+  const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
+    containerRef,
+    oldMessageChunk?.data?.totalPages,
+    page,
+    setPage,
+    oldMessageChunk?.data?.message
+  );
+
+  const errors = [
+    { isError: chatDetatils.isError, error: chatDetatils.error },
+    { isError: oldMessageChunk.isError, error: oldMessageChunk.error },
+  ];
+
+  // console.log(oldMessages);
 
   const members = chatDetatils?.data?.chat?.members;
 
@@ -56,6 +66,10 @@ const Chat = ({ chatId, user }) => {
 
   useErrors(errors);
 
+  const allMessages = [...oldMessages, ...messages];
+
+  // const allMessages = [...oldMessageChunk.data.message, ...messages];
+
   return chatDetatils.isLoading ? (
     <Skeleton />
   ) : (
@@ -74,7 +88,7 @@ const Chat = ({ chatId, user }) => {
       >
         {/* MESSAGES RENDer */}
 
-        {messages.map((i) => (
+        {allMessages.map((i) => (
           <MessageComponent key={i._id} message={i} user={user} />
         ))}
       </Stack>
