@@ -3,7 +3,7 @@ import {
   SendOutlined as SendOutlinedIcon,
 } from "@mui/icons-material";
 import { IconButton, Skeleton, Stack } from "@mui/material";
-import { Fragment, useCallback, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import FileMenu from "../components/dialogs/FileMenu";
 import AppLayout from "../components/layout/AppLayout";
 import MessageComponent from "../components/shared/MessageComponent";
@@ -65,10 +65,24 @@ const Chat = ({ chatId, user }) => {
     setMessage("");
   };
 
-  const newMessagesHandler = useCallback((data) => {
-    // console.log(data);
-    setMessages((prev) => [...prev, data.message]);
-  }, []);
+  useEffect(() => {
+    return () => {
+      setMessages([]);
+      setMessage("");
+      setOldMessages([]);
+      setPage(1);
+    };
+  }, [chatId]);
+
+  const newMessagesHandler = useCallback(
+    (data) => {
+      // console.log(data);
+      if (data.chatId !== chatId) return;
+
+      setMessages((prev) => [...prev, data.message]);
+    },
+    [chatId]
+  );
 
   const eventsHandler = { [NEW_MESSAGE]: newMessagesHandler };
 
