@@ -16,7 +16,11 @@ import {
   NEW_MESSAGE_ALERT,
   // NEW_MESSAGE,
 } from "../../constants/events";
-import { incrementNotifications } from "../../redux/reducres/chat";
+import {
+  incrementNotifications,
+  setNewMessagesAlert,
+} from "../../redux/reducres/chat";
+import { getORSaveFromStorage } from "../../lib/features";
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
@@ -28,10 +32,15 @@ const AppLayout = () => (WrappedComponent) => {
 
     const { isMobile } = useSelector((state) => state.misc);
     const { user } = useSelector((state) => state.auth);
+    const { newMessagesAlert } = useSelector((state) => state.chat);
 
     const { data, isLoading, isError, error, refetch } = useMyChatsQuery("");
 
     useErrors([{ isError, error }]);
+
+    useEffect(() => {
+      getORSaveFromStorage({ key: NEW_MESSAGE_ALERT, value: newMessagesAlert });
+    }, [newMessagesAlert]);
 
     const handleDeleteChat = (e, _id, groupChat) => {
       e.preventDefault();
@@ -42,7 +51,14 @@ const AppLayout = () => (WrappedComponent) => {
       dispatch(setIsMobile(false));
     };
 
-    const newMessageAlertHandler = useCallback(() => {}, []);
+    const newMessageAlertHandler = useCallback(
+      (data) => {
+        if (data.chatId === chatId) return;
+
+        dispatch(setNewMessagesAlert(data));
+      },
+      [chatId]
+    );
 
     const newRequestHandler = useCallback(() => {
       dispatch(incrementNotifications());
@@ -70,6 +86,7 @@ const AppLayout = () => (WrappedComponent) => {
               chats={data?.chats}
               chatId={chatId}
               handleDeleteChat={handleDeleteChat}
+              newMessagesAlert={newMessagesAlert}
             />
           </Drawer>
         )}
@@ -90,6 +107,7 @@ const AppLayout = () => (WrappedComponent) => {
                 chats={data?.chats}
                 chatId={chatId}
                 handleDeleteChat={handleDeleteChat}
+                newMessagesAlert={newMessagesAlert}
               />
             )}
           </Grid2>
