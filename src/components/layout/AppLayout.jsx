@@ -10,7 +10,7 @@ import ChatList from "../specific/ChatList";
 import Profile from "../specific/Profile";
 import Header from "./Header";
 import { getSocket } from "../../socket";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import {
   NEW_REQUEST,
   NEW_MESSAGE_ALERT,

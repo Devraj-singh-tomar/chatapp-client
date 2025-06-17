@@ -1,4 +1,35 @@
 import { Grid2, Skeleton, Stack } from "@mui/material";
+import { BouncingSkeleton } from "../styles/StyledComponent";
+
+export const TypingLoader = () => {
+  return (
+    <Stack
+      spacing={"0.5rem"}
+      direction={"row"}
+      // padding={"0.5rem"}
+      // justifyContent={"center"}
+    >
+      <BouncingSkeleton
+        variant="circular"
+        width={15}
+        height={15}
+        sx={{ backgroundColor: "purple" }}
+      />
+      <BouncingSkeleton
+        variant="circular"
+        width={15}
+        height={15}
+        sx={{ backgroundColor: "purple" }}
+      />
+      <BouncingSkeleton
+        variant="circular"
+        width={15}
+        height={15}
+        sx={{ backgroundColor: "purple" }}
+      />
+    </Stack>
+  );
+};
 
 const LayoutLoader = () => {
   return (
