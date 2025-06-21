@@ -9,7 +9,12 @@ import AppLayout from "../components/layout/AppLayout";
 import MessageComponent from "../components/shared/MessageComponent";
 import { InputBox } from "../components/styles/StyledComponent";
 import { blue } from "../constants/color";
-import { NEW_MESSAGE, START_TYPING, STOP_TYPING } from "../constants/events";
+import {
+  ALERT,
+  NEW_MESSAGE,
+  START_TYPING,
+  STOP_TYPING,
+} from "../constants/events";
 import { useErrors, useSocketEvents } from "../hooks/hooks";
 import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
 import { getSocket } from "../socket";
@@ -135,7 +140,25 @@ const Chat = ({ chatId, user }) => {
     [chatId]
   );
 
+  const alertListener = useCallback(
+    (content) => {
+      const messageForAlert = {
+        content,
+        sender: {
+          _id: "oinoniononqnwoinodnq",
+          name: "Admin",
+        },
+        chat: chatId,
+        createdAt: new Date().toISOString(),
+      };
+
+      setMessages((prev) => [...prev, messageForAlert]);
+    },
+    [chatId]
+  );
+
   const eventsHandler = {
+    [ALERT]: alertListener,
     [NEW_MESSAGE]: newMessagesListener,
     [START_TYPING]: startTypingListener,
     [STOP_TYPING]: stopTypingListener,

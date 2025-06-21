@@ -8,7 +8,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense } from "react";
 import { black, yellow } from "../../constants/color";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +16,7 @@ import axios from "axios";
 import { server } from "../../constants/config";
 import { toast } from "react-hot-toast";
 import { userNotExists } from "../../redux/reducres/auth";
-import { setIsNotification } from "../../redux/reducres/misc";
+import { setIsNewGroup, setIsNotification } from "../../redux/reducres/misc";
 
 // ICONS IMPORTS
 import {
@@ -38,17 +38,17 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isSearch, isNotification } = useSelector((state) => state.misc);
+  const { isSearch, isNotification, isNewGroup } = useSelector(
+    (state) => state.misc
+  );
   const { notificationCount } = useSelector((state) => state.chat);
-
-  const [isNewGroup, setIsNewGroup] = useState(false);
 
   const handleMobile = () => dispatch(setIsMobile(true));
 
   const openSearch = () => dispatch(setIsSearch(true));
 
   const openNewGroup = () => {
-    setIsNewGroup((prev) => !prev);
+    dispatch(setIsNewGroup(true));
   };
 
   const navigateToGroup = () => {

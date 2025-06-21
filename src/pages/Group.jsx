@@ -22,14 +22,16 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import AvatarCard from "../components/shared/AvatarCard";
 import { Link } from "../components/styles/StyledComponent";
 import { black, yellow } from "../constants/color";
-import { samepleChats, sampleUsers } from "../constants/sampleData";
+import { sampleUsers } from "../constants/sampleData";
 import UserItem from "../components/shared/UserItem";
+import { useChatDetailsQuery, useGetGroupsQuery } from "../redux/api/api";
+import { useErrors } from "../hooks/hooks";
+import LayoutLoader from "../components/layout/Loaders";
 
 // LAZY-LOAD COMPONENT
 const ConfirmDeleteDialog = lazy(() =>
   import("../components/dialogs/ConfirmDeleteDialog")
 );
-
 const AddMemberDialog = lazy(() =>
   import("../components/dialogs/AddMemberDialog")
 );
@@ -38,14 +40,48 @@ const isAddMember = false;
 
 const Group = () => {
   const chatId = useSearchParams()[0].get("group");
-
   const navigate = useNavigate();
+
+  const myGroups = useGetGroupsQuery("");
+  const groupDetails = useChatDetailsQuery(
+    { chatId, populate: true },
+    { skip: !chatId }
+  );
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [groupName, setGroupName] = useState("");
   const [groupNameUpdatedValue, setGroupNameUpdatedValue] = useState();
   const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false);
+  const [members, setMembers] = useState([]);
+
+  const errors = [
+    {
+      isError: myGroups.isError,
+      error: myGroups.error,
+    },
+    {
+      isError: groupDetails.isError,
+      error: groupDetails.error,
+    },
+  ];
+
+  useErrors(errors);
+
+  useEffect(() => {
+    if (groupDetails.data) {
+      setGroupName(groupDetails.data.chat.name);
+      setGroupNameUpdatedValue(groupDetails.data.chat.name);
+      setMembers(groupDetails.data.chat.members);
+    }
+
+    return () => {
+      setGroupName("");
+      setGroupNameUpdatedValue("");
+      setMembers([]);
+      setIsEdit(false);
+    };
+  }, [groupDetails.data]);
 
   const navigateBack = () => {
     navigate("/");
@@ -207,7 +243,9 @@ const Group = () => {
     </Stack>
   );
 
-  return (
+  return myGroups.isLoading ? (
+    <LayoutLoader />
+  ) : (
     <Grid2
       container
       height={"100%"}
@@ -228,7 +266,7 @@ const Group = () => {
         <Typography variant="h5" padding={1.2} textAlign={"center"}>
           Your Groups
         </Typography>
-        <GroupsList chatId={chatId} myGroups={samepleChats} />
+        <GroupsList chatId={chatId} myGroups={myGroups?.data?.groups} />
       </Grid2>
 
       <Grid2
@@ -269,7 +307,7 @@ const Group = () => {
             >
               {/*SHOW's MEMBER's */}
 
-              {sampleUsers.map((i) => (
+              {members.map((i) => (
                 <UserItem
                   styling={{
                     boxShadow: "0 0 4px 0 rgba(255, 255, 255, 0.2)",
@@ -320,7 +358,11 @@ const Group = () => {
         open={isMobileMenuOpen}
         onClose={handleMobileClose}
       >
-        <GroupsList w={"50vw"} chatId={chatId} myGroups={samepleChats} />
+        <GroupsList
+          w={"50vw"}
+          chatId={chatId}
+          myGroups={myGroups?.data?.groups}
+        />
       </Drawer>
     </Grid2>
   );
