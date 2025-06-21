@@ -14,6 +14,7 @@ import { useCallback, useEffect } from "react";
 import {
   NEW_REQUEST,
   NEW_MESSAGE_ALERT,
+  REFETCH_CHATS,
   // NEW_MESSAGE,
 } from "../../constants/events";
 import {
@@ -64,9 +65,14 @@ const AppLayout = () => (WrappedComponent) => {
       dispatch(incrementNotifications());
     }, [dispatch]);
 
+    const refetchHandler = useCallback(() => {
+      refetch();
+    }, [refetch]);
+
     const eventHandlers = {
       [NEW_MESSAGE_ALERT]: newMessageAlertHandler,
       [NEW_REQUEST]: newRequestHandler,
+      [REFETCH_CHATS]: refetchHandler,
     };
 
     useSocketEvents(socket, eventHandlers);

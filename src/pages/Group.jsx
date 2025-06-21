@@ -22,10 +22,13 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import AvatarCard from "../components/shared/AvatarCard";
 import { Link } from "../components/styles/StyledComponent";
 import { black, yellow } from "../constants/color";
-import { sampleUsers } from "../constants/sampleData";
 import UserItem from "../components/shared/UserItem";
-import { useChatDetailsQuery, useGetGroupsQuery } from "../redux/api/api";
-import { useErrors } from "../hooks/hooks";
+import {
+  useChatDetailsQuery,
+  useGetGroupsQuery,
+  useRenameGroupMutation,
+} from "../redux/api/api";
+import { useAsyncMutation, useErrors } from "../hooks/hooks";
 import LayoutLoader from "../components/layout/Loaders";
 
 // LAZY-LOAD COMPONENT
@@ -47,11 +50,14 @@ const Group = () => {
     { chatId, populate: true },
     { skip: !chatId }
   );
+  const [updateGroup, isLoadingGroupName] = useAsyncMutation(
+    useRenameGroupMutation
+  );
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [groupName, setGroupName] = useState("");
-  const [groupNameUpdatedValue, setGroupNameUpdatedValue] = useState();
+  const [groupNameUpdatedValue, setGroupNameUpdatedValue] = useState("");
   const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false);
   const [members, setMembers] = useState([]);
 
@@ -97,7 +103,11 @@ const Group = () => {
 
   const updateGroupNameHandler = () => {
     setIsEdit(false);
-    console.log("updated group name");
+
+    updateGroup("Updating group name...", {
+      chatId,
+      name: groupNameUpdatedValue,
+    });
   };
 
   const openConfirmDeleteHandler = () => {
@@ -193,14 +203,22 @@ const Group = () => {
             onChange={(e) => setGroupNameUpdatedValue(e.target.value)}
           />
 
-          <IconButton sx={{ color: yellow }} onClick={updateGroupNameHandler}>
+          <IconButton
+            sx={{ color: yellow }}
+            onClick={updateGroupNameHandler}
+            disabled={isLoadingGroupName}
+          >
             <DoneIcon />
           </IconButton>
         </>
       ) : (
         <>
           <Typography variant="h5">{groupName}</Typography>
-          <IconButton sx={{ color: yellow }} onClick={() => setIsEdit(true)}>
+          <IconButton
+            sx={{ color: yellow }}
+            onClick={() => setIsEdit(true)}
+            disabled={isLoadingGroupName}
+          >
             <EditIcon />
           </IconButton>
         </>
