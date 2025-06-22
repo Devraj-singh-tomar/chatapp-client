@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import { adminLogin } from "../thunks.js/admin";
+import { toast } from "react-hot-toast";
 const initialState = {
   user: null,
   isAdmin: false,
@@ -20,6 +21,18 @@ const authSlice = createSlice({
       state.loader = false;
     },
   },
+
+  extraReducers: (builder) =>
+    builder
+      .addCase(adminLogin.fulfilled, (state, action) => {
+        state.isAdmin = true;
+        state.loader = false;
+        toast.success(action.payload);
+      })
+      .addCase(adminLogin.rejected, (state, action) => {
+        state.isAdmin = false;
+        toast.error(action.error.message);
+      }),
 });
 
 export default authSlice;
