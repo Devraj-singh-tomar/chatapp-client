@@ -1,4 +1,5 @@
-import { memo } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import DoneIcon from "@mui/icons-material/Done";
 import {
   Avatar,
   Dialog,
@@ -10,18 +11,16 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { sampleNotifications } from "../../constants/sampleData";
-import CloseIcon from "@mui/icons-material/Close";
-import DoneIcon from "@mui/icons-material/Done";
+import { memo } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import { black, yellow } from "../../constants/color";
+import { useErrors } from "../../hooks/hooks";
 import {
   useAcceptFriendRequestMutation,
   useGetNotificationsQuery,
 } from "../../redux/api/api";
-import { useErrors } from "../../hooks/hooks";
-import { useDispatch, useSelector } from "react-redux";
 import { setIsNotification } from "../../redux/reducres/misc";
-import toast from "react-hot-toast";
 
 const Notification = () => {
   const dispatch = useDispatch();

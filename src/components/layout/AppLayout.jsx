@@ -1,31 +1,31 @@
 import { Drawer, Grid2, Skeleton } from "@mui/material";
+import { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { black } from "../../constants/color";
+import {
+  NEW_MESSAGE_ALERT,
+  NEW_REQUEST,
+  REFETCH_CHATS,
+} from "../../constants/events";
 import { useErrors, useSocketEvents } from "../../hooks/hooks";
+import { getORSaveFromStorage } from "../../lib/features";
 import { useMyChatsQuery } from "../../redux/api/api";
+import {
+  incrementNotifications,
+  setNewMessagesAlert,
+} from "../../redux/reducres/chat";
 import {
   setIsDeleteMenu,
   setIsMobile,
   setSelectedDeleteChat,
 } from "../../redux/reducres/misc";
+import { getSocket } from "../../socket";
+import DeleteChatMenu from "../dialogs/DeleteChatMenu";
 import Title from "../shared/Title";
 import ChatList from "../specific/ChatList";
 import Profile from "../specific/Profile";
 import Header from "./Header";
-import { getSocket } from "../../socket";
-import { useCallback, useEffect, useRef } from "react";
-import {
-  NEW_REQUEST,
-  NEW_MESSAGE_ALERT,
-  REFETCH_CHATS,
-} from "../../constants/events";
-import {
-  incrementNotifications,
-  setNewMessagesAlert,
-} from "../../redux/reducres/chat";
-import { getORSaveFromStorage } from "../../lib/features";
-import DeleteChatMenu from "../dialogs/DeleteChatMenu";
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {

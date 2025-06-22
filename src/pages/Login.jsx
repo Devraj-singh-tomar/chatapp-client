@@ -22,6 +22,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
@@ -34,6 +35,8 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    const toastId = toast.loading("Logging...");
+    setIsLoading(true);
 
     const config = {
       withCredentials: true,
@@ -54,14 +57,18 @@ const Login = () => {
 
       dispatch(userExists(data.user));
 
-      toast.success(data.message, {});
+      toast.success(data.message, { id: toastId });
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    const toastId = toast.loading("Signing up...");
+    setIsLoading(true);
 
     const formData = new FormData();
 
@@ -87,10 +94,11 @@ const Login = () => {
 
       dispatch(userExists(data.user));
 
-      toast.success(data.message);
+      toast.success(data.message, { id: toastId });
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something Went Wrong");
     } finally {
+      setIsLoading(false);
     }
   };
 
@@ -192,6 +200,7 @@ const Login = () => {
                   variant="outlined"
                   color="secondary"
                   type="submit"
+                  disabled={isLoading}
                 >
                   Login
                 </Button>
@@ -229,6 +238,7 @@ const Login = () => {
                   variant="outlined"
                   color="info"
                   onClick={toggleLogin}
+                  disabled={isLoading}
                 >
                   Sign Up Instead
                 </Button>
@@ -400,6 +410,7 @@ const Login = () => {
                   variant="outlined"
                   color="secondary"
                   type="submit"
+                  disabled={isLoading}
                 >
                   Sign Up
                 </Button>
@@ -418,6 +429,7 @@ const Login = () => {
                   variant="outlined"
                   color="primary"
                   onClick={toggleLogin}
+                  disabled={isLoading}
                 >
                   Login Instead
                 </Button>
