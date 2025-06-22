@@ -3,7 +3,8 @@ import { Button, Container, Paper, TextField, Typography } from "@mui/material";
 import { black } from "../../constants/color";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { adminLogin } from "../../redux/thunks.js/admin";
+import { adminLogin, getAdmin } from "../../redux/thunks.js/admin";
+import { useEffect } from "react";
 
 const AdminLogin = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,10 @@ const AdminLogin = () => {
     e.preventDefault();
     dispatch(adminLogin(secretKey.value));
   };
+
+  useEffect(() => {
+    dispatch(getAdmin());
+  }, [dispatch]);
 
   if (isAdmin) return <Navigate to={"/admin/dashboard"} />;
 
