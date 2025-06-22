@@ -9,9 +9,11 @@ import {
 import {
   Backdrop,
   Button,
+  CircularProgress,
   Drawer,
   Grid2,
   IconButton,
+  Skeleton,
   Stack,
   TextField,
   Tooltip,
@@ -25,6 +27,7 @@ import { black, yellow } from "../constants/color";
 import UserItem from "../components/shared/UserItem";
 import {
   useChatDetailsQuery,
+  useDeleteChatMutation,
   useGetGroupsQuery,
   useRemoveGroupMembersMutation,
   useRenameGroupMutation,
@@ -59,6 +62,9 @@ const Group = () => {
   );
   const [removeMember, isLoadingRemoveMember] = useAsyncMutation(
     useRemoveGroupMembersMutation
+  );
+  const [deleteGroup, isLoadingDeleteGroup] = useAsyncMutation(
+    useDeleteChatMutation
   );
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -130,7 +136,9 @@ const Group = () => {
   };
 
   const deleteHandler = () => {
+    deleteGroup("Deleting group", chatId);
     closeConfirmDeleteHandler();
+    navigate("/groups");
   };
 
   const removeMemberHandler = (userId) => {
@@ -334,19 +342,23 @@ const Group = () => {
             >
               {/*SHOW's MEMBER's */}
 
-              {members.map((i) => (
-                <UserItem
-                  styling={{
-                    boxShadow: "0 0 4px 0 rgba(255, 255, 255, 0.2)",
-                    padding: ".5rem 1rem",
-                    borderRadius: "10px",
-                  }}
-                  key={i._id}
-                  user={i}
-                  isAdded
-                  handler={removeMemberHandler}
-                />
-              ))}
+              {isLoadingRemoveMember ? (
+                <CircularProgress />
+              ) : (
+                members.map((i) => (
+                  <UserItem
+                    styling={{
+                      boxShadow: "0 0 4px 0 rgba(255, 255, 255, 0.2)",
+                      padding: ".5rem 1rem",
+                      borderRadius: "10px",
+                    }}
+                    key={i._id}
+                    user={i}
+                    isAdded
+                    handler={removeMemberHandler}
+                  />
+                ))
+              )}
             </Stack>
 
             {ButtonGroup}
