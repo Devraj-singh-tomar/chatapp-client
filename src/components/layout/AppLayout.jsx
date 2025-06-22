@@ -67,7 +67,8 @@ const AppLayout = () => (WrappedComponent) => {
 
     const refetchHandler = useCallback(() => {
       refetch();
-    }, [refetch]);
+      navigate("/");
+    }, [refetch, navigate]);
 
     const eventHandlers = {
       [NEW_MESSAGE_ALERT]: newMessageAlertHandler,
