@@ -1,11 +1,15 @@
+import { useInfiniteScrollTop } from "6pp";
 import {
   AttachFileOutlined as AttachFileOutlinedIcon,
   SendOutlined as SendOutlinedIcon,
 } from "@mui/icons-material";
 import { IconButton, Skeleton, Stack } from "@mui/material";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import FileMenu from "../components/dialogs/FileMenu";
 import AppLayout from "../components/layout/AppLayout";
+import { TypingLoader } from "../components/layout/Loaders";
 import MessageComponent from "../components/shared/MessageComponent";
 import { InputBox } from "../components/styles/StyledComponent";
 import { blue } from "../constants/color";
@@ -17,13 +21,9 @@ import {
 } from "../constants/events";
 import { useErrors, useSocketEvents } from "../hooks/hooks";
 import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
-import { getSocket } from "../socket";
-import { useInfiniteScrollTop } from "6pp";
-import { useDispatch } from "react-redux";
-import { setIsFileMenu } from "../redux/reducres/misc";
 import { removeNewMessagesAlert } from "../redux/reducres/chat";
-import { TypingLoader } from "../components/layout/Loaders";
-import { useNavigate } from "react-router-dom";
+import { setIsFileMenu } from "../redux/reducres/misc";
+import { getSocket } from "../socket";
 
 const Chat = ({ chatId, user }) => {
   const containerRef = useRef(null);
@@ -111,8 +111,8 @@ const Chat = ({ chatId, user }) => {
   }, [messages]);
 
   useEffect(() => {
-    if (!chatDetatils.data?.chat) return navigate("/");
-  }, [chatDetatils.data]);
+    if (chatDetatils.isError) return navigate("/");
+  }, [chatDetatils.isError]);
 
   const newMessagesListener = useCallback(
     (data) => {
