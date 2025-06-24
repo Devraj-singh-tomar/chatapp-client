@@ -127,7 +127,7 @@ const Dashboard = () => {
                 alignItems: "center",
                 width: { xs: "100%", sm: "50%" },
                 position: "relative",
-                width: "100%",
+                // width: "100%",
                 maxWidth: "20rem",
                 // height: "25rem",
               }}
